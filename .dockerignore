@@ -1,0 +1,10 @@
+# Backend
+node_modules/
+dist/
+.git/
+.env
+
+# Frontend
+node_modules/
+dist/
+.git/
