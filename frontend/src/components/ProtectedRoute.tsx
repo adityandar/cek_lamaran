@@ -3,6 +3,6 @@ import { useAuthStore } from '../store/authStore';
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const token = useAuthStore((s) => s.token);
-  if (!token) return <Navigate to="/login" replace />;
+  if (!token) return <Navigate to="/" replace />;
   return <>{children}</>;
 }

@@ -6,7 +6,7 @@ function Dialog({ open, onOpenChange, children }: { open: boolean; onOpenChange:
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="fixed inset-0 bg-black/50" onClick={() => onOpenChange(false)} />
-      <div className="relative z-50 bg-[#FFFDF7] border-4 border-black shadow-[8px_8px_0_0_#000] p-6 w-full max-w-md mx-4">
+      <div className="relative z-50 bg-[#FFFDF7] border-4 border-black shadow-[8px_8px_0_0_#000] p-6 w-full max-w-md mx-4 max-h-[85vh] overflow-y-auto">
         {children}
       </div>
     </div>

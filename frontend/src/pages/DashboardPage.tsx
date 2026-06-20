@@ -34,7 +34,7 @@ const FILTERS: { id: JobStatus | 'ALL'; label: string }[] = [
   { id: 'OFFERED', label: 'Offered' },
 ]
 
-const chipBase = 'text-xs font-bold px-2.5 py-1 border-2 transition-all'
+const chipBase = 'text-xs font-bold px-2.5 py-1.5 border-2 transition-all whitespace-nowrap'
 const chipActive = `${chipBase} bg-black text-white border-black shadow-[2px_2px_0_0_#000]`
 const chipInactive = `${chipBase} bg-white border-black hover:bg-gray-100 shadow-[2px_2px_0_0_#000] hover:shadow-[1px_1px_0_0_#000] hover:translate-x-[1px] hover:translate-y-[1px]`
 
@@ -139,33 +139,29 @@ export function DashboardPage() {
             </div>
 
             {activeJobs.length > 0 && (
-              <div className="flex items-center justify-between flex-wrap gap-2">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 {viewMode === 'LIST' && (
                   <div className="flex items-center gap-1">
-                    <span className="text-xs font-bold mr-1">Filter</span>
-                    {FILTERS.map((f) => (
-                      <button
-                        key={f.id}
-                        onClick={() => setFilter(f.id)}
-                        className={filter === f.id ? chipActive : chipInactive}
-                      >
-                        {f.label}
-                      </button>
-                    ))}
+                    <span className="text-[11px] sm:text-xs font-bold mr-1 shrink-0">Filter</span>
+                    <div className="flex items-center gap-1 overflow-x-auto py-0.5">
+                      {FILTERS.map((f) => (
+                        <button key={f.id} onClick={() => setFilter(f.id)} className={filter === f.id ? chipActive : chipInactive}>
+                          {f.label}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 )}
 
-                <div className="flex items-center gap-1 ml-auto">
-                  <span className="text-xs font-bold mr-0.5">Urut</span>
-                  {(['newest', 'oldest', 'status'] as const).filter(s => viewMode === 'LIST' || s !== 'status').map((s) => (
-                    <button
-                      key={s}
-                      onClick={() => setSortBy(s)}
-                      className={sortBy === s ? chipActive : chipInactive}
-                    >
-                      {s === 'newest' ? 'Terbaru' : s === 'oldest' ? 'Terlama' : 'Status'}
-                    </button>
-                  ))}
+                <div className="flex items-center gap-1 sm:ml-auto">
+                  <span className="text-[11px] sm:text-xs font-bold mr-0.5 shrink-0">Urut</span>
+                  <div className="flex items-center gap-1 overflow-x-auto py-0.5">
+                    {(['newest', 'oldest', 'status'] as const).filter(s => viewMode === 'LIST' || s !== 'status').map((s) => (
+                      <button key={s} onClick={() => setSortBy(s)} className={sortBy === s ? chipActive : chipInactive}>
+                        {s === 'newest' ? 'Terbaru' : s === 'oldest' ? 'Terlama' : 'Status'}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
             )}
@@ -174,19 +170,9 @@ export function DashboardPage() {
           {activeJobs.length === 0 ? (
             <EmptyState />
           ) : viewMode === 'LIST' ? (
-            <JobList
-              jobs={sorted}
-              onStatusChange={handleStatus}
-              onDelete={handleDelete}
-              onDetail={handleDetail}
-            />
+            <JobList jobs={sorted} onStatusChange={handleStatus} onDelete={handleDelete} onDetail={handleDetail} />
           ) : (
-            <KanbanBoard
-              jobs={sorted}
-              onStatusChange={handleStatus}
-              onDelete={handleDelete}
-              onDetail={handleDetail}
-            />
+            <KanbanBoard jobs={sorted} onStatusChange={handleStatus} onDelete={handleDelete} onDetail={handleDetail} />
           )}
         </>
       )}

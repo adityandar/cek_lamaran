@@ -58,7 +58,7 @@ export function LandingPage() {
         </div>
       </header>
 
-      <section className="max-w-5xl mx-auto px-6 pt-24 pb-20 text-center relative">
+      <section className="max-w-5xl mx-auto px-6 pt-16 sm:pt-24 pb-16 sm:pb-20 text-center relative">
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none -z-10">
           <div className="absolute top-20 left-10 w-32 h-32 bg-[#FFC8DD] border-4 border-black rotate-12" />
           <div className="absolute top-40 right-10 w-24 h-24 bg-[#BDE0FE] border-4 border-black -rotate-6" />
@@ -70,24 +70,24 @@ export function LandingPage() {
           Satset, Efektif.
         </div>
         <h1 className="text-5xl sm:text-7xl font-black tracking-tighter leading-[1.05] mb-6">
-          Lacak Semua Lamaran
+          Lacak Semua <br className="sm:hidden" /> Lamaran
           <br />
           <span className="bg-[#FFE600] px-2 inline-block -rotate-1">Satu Tempat</span>
         </h1>
         <p className="text-lg max-w-xl mx-auto mb-10 font-medium">
           Masukkan link atau teks job, atur statusnya, pantau progres — tanpa <span className="line-through decoration-4">spreadsheet</span>, tanpa ribet.
         </p>
-        <div className="flex items-center justify-center gap-4">
-          <a href="/register" className="inline-flex items-center gap-2 font-bold text-lg px-8 py-3 border-4 border-black bg-[#FF6B9D] text-white hover:bg-[#e85a8a] transition-colors shadow-[8px_8px_0_0_#000] hover:shadow-[4px_4px_0_0_#000] hover:translate-x-[4px] hover:translate-y-[4px]">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+          <a href="/register" className="inline-flex items-center gap-2 font-bold text-base sm:text-lg px-6 py-2.5 sm:px-8 sm:py-3 border-4 border-black bg-[#FF6B9D] text-white hover:bg-[#e85a8a] transition-colors shadow-[8px_8px_0_0_#000] hover:shadow-[4px_4px_0_0_#000] hover:translate-x-[4px] hover:translate-y-[4px]">
             Mulai Gratis <ArrowRight className="h-5 w-5" />
           </a>
-          <a href="/login" className="inline-flex items-center font-bold text-lg px-8 py-3 border-4 border-black bg-white hover:bg-gray-100 transition-colors shadow-[8px_8px_0_0_#000] hover:shadow-[4px_4px_0_0_#000] hover:translate-x-[4px] hover:translate-y-[4px]">
+          <a href="/login" className="inline-flex items-center font-bold text-base sm:text-lg px-6 py-2.5 sm:px-8 sm:py-3 border-4 border-black bg-white hover:bg-gray-100 transition-colors shadow-[8px_8px_0_0_#000] hover:shadow-[4px_4px_0_0_#000] hover:translate-x-[4px] hover:translate-y-[4px]">
             Sudah punya akun
           </a>
         </div>
       </section>
 
-      <section className="max-w-5xl mx-auto px-6 pb-24">
+      <section className="max-w-5xl mx-auto px-6 pb-16 sm:pb-24">
         <h2 className="text-3xl font-black mb-8 text-center">
           Kenapa <span className="bg-[#FFE600] px-1">CekLamaran</span>?
         </h2>
@@ -112,14 +112,22 @@ export function LandingPage() {
           <p className="text-[#BDE0FE] font-medium mb-8 text-lg">
             Gratis, tanpa email marketing, tanpa drama.
           </p>
-          <a href="/register" className="inline-flex items-center gap-2 font-bold text-lg px-8 py-3 border-4 border-black bg-[#FFE600] text-black hover:bg-[#e6cf00] transition-colors shadow-[8px_8px_0_0_#FFF] hover:shadow-[4px_4px_0_0_#FFF] hover:translate-x-[4px] hover:translate-y-[4px]">
+          <a href="/register" className="inline-flex items-center gap-2 font-bold text-base sm:text-lg px-6 py-2.5 sm:px-8 sm:py-3 border-4 border-black bg-[#FFE600] text-black hover:bg-[#e6cf00] transition-colors shadow-[8px_8px_0_0_#FFF] hover:shadow-[4px_4px_0_0_#FFF] hover:translate-x-[4px] hover:translate-y-[4px]">
             Mulai Sekarang <ArrowRight className="h-5 w-5" />
           </a>
         </div>
       </section>
 
-      <footer className="border-t-4 border-black py-6 text-center text-sm font-bold bg-[#FFE600]">
-        CekLamaran &mdash; dibikin karena males pakai <span className="line-through decoration-4">spreadsheet</span>.
+      <footer className="border-t-4 border-black py-6 text-center bg-[#FFE600]">
+        <p className="text-sm font-bold">CekLamaran &mdash; dibikin karena males pakai <span className="line-through decoration-4">spreadsheet</span>.</p>
+        <p className="text-[10px] font-medium mt-2 opacity-60">
+          Dev{' '}
+          <a href="https://linkedin.com/in/adityandar" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-100">LinkedIn</a>
+          <span className="mx-1">·</span>
+          <a href="https://www.threads.com/@adityandar.jpg" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-100">Threads</a>
+          <span className="mx-1">·</span>
+          <a href="https://tiktok.com/@yahadityak" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-100">TikTok</a>
+        </p>
       </footer>
     </div>
   )
