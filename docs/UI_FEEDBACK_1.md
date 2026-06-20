@@ -1,0 +1,3 @@
+1. ✅ ~~Job Cardnya spacingnya terlalu kecil.~~ → padding `p-4`, gap `gap-5`, font lebih besar, company name clickable untuk detail.
+2. ✅ ~~Filter, Sort, dan tipe view terlalu identik jadi bingung kaya 1 hal yang sama.~~ → Filter: label "Filter" + `border-2`. Sort: label "Urut" + dibungkus container `border-2`. View toggle: `border-4`, lebih tebal, `ml-auto`.
+3. ✅ ~~Button View, dropdown select status, dan button delete di job card berasa overwhelmed.~~ → Eye dihapus, company name jadi clickable untuk detail. Delete set opacity 50% (hover jadi 100%) biar tidak dominan. Sisa dropdown status + delete button saja di actions.

@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from 'react'
-import { AlertCircle, ArrowUpDown } from 'lucide-react'
+import { AlertCircle } from 'lucide-react'
 import { useAuthStore } from '../store/authStore'
 import { useJobStore } from '../store/jobStore'
 import { Layout } from '../components/Layout'
@@ -25,9 +25,17 @@ const STATUS_ORDER: Record<JobStatus, number> = {
   OFFERED: 4,
 }
 
-const sortBtnBase = 'font-bold border-2 border-black text-xs px-3 py-1.5 transition-all'
-const sortBtnActive = `${sortBtnBase} bg-black text-white shadow-[2px_2px_0_0_#000]`
-const sortBtnInactive = `${sortBtnBase} bg-white hover:bg-gray-100 shadow-[2px_2px_0_0_#000] hover:shadow-[1px_1px_0_0_#000] hover:translate-x-[1px] hover:translate-y-[1px]`
+const FILTERS: { id: JobStatus | 'ALL'; label: string }[] = [
+  { id: 'ALL', label: 'All' },
+  { id: 'APPLIED', label: 'Applied' },
+  { id: 'IN_PROGRESS', label: 'In Progress' },
+  { id: 'REJECTED', label: 'Rejected' },
+  { id: 'OFFERED', label: 'Offered' },
+]
+
+const chipBase = 'text-xs font-bold px-2.5 py-1 border-2 transition-all'
+const chipActive = `${chipBase} bg-black text-white border-black shadow-[2px_2px_0_0_#000]`
+const chipInactive = `${chipBase} bg-white border-black hover:bg-gray-100 shadow-[2px_2px_0_0_#000] hover:shadow-[1px_1px_0_0_#000] hover:translate-x-[1px] hover:translate-y-[1px]`
 
 export function DashboardPage() {
   const token = useAuthStore((s) => s.token)
@@ -122,33 +130,49 @@ export function DashboardPage() {
         <div className="flex items-center justify-center py-20">
           <div className="font-bold">Memuat data...</div>
         </div>
-      ) : activeJobs.length === 0 ? (
-        <EmptyState />
       ) : (
         <>
-          <div className="flex items-center justify-between mb-4 gap-2 flex-wrap">
-            <ViewToggle
-              viewMode={viewMode}
-              onViewChange={setViewMode}
-              activeFilter={filter}
-              onFilterChange={setFilter}
-            />
-
-            <div className="flex items-center gap-1">
-              <ArrowUpDown className="h-3.5 w-3.5" />
-              {(['newest', 'oldest', 'status'] as const).filter(s => viewMode === 'LIST' || s !== 'status').map((s) => (
-                <button
-                  key={s}
-                  onClick={() => setSortBy(s)}
-                  className={sortBy === s ? sortBtnActive : sortBtnInactive}
-                >
-                  {s === 'newest' ? 'Terbaru' : s === 'oldest' ? 'Terlama' : 'Status'}
-                </button>
-              ))}
+          <div className="mb-4">
+            <div className="flex items-center gap-4 mb-3">
+              <ViewToggle viewMode={viewMode} onViewChange={setViewMode} />
             </div>
+
+            {activeJobs.length > 0 && (
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                {viewMode === 'LIST' && (
+                  <div className="flex items-center gap-1">
+                    <span className="text-xs font-bold mr-1">Filter</span>
+                    {FILTERS.map((f) => (
+                      <button
+                        key={f.id}
+                        onClick={() => setFilter(f.id)}
+                        className={filter === f.id ? chipActive : chipInactive}
+                      >
+                        {f.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                <div className="flex items-center gap-1 ml-auto">
+                  <span className="text-xs font-bold mr-0.5">Urut</span>
+                  {(['newest', 'oldest', 'status'] as const).filter(s => viewMode === 'LIST' || s !== 'status').map((s) => (
+                    <button
+                      key={s}
+                      onClick={() => setSortBy(s)}
+                      className={sortBy === s ? chipActive : chipInactive}
+                    >
+                      {s === 'newest' ? 'Terbaru' : s === 'oldest' ? 'Terlama' : 'Status'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
-          {viewMode === 'LIST' ? (
+          {activeJobs.length === 0 ? (
+            <EmptyState />
+          ) : viewMode === 'LIST' ? (
             <JobList
               jobs={sorted}
               onStatusChange={handleStatus}

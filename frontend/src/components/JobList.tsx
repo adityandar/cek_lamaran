@@ -10,7 +10,7 @@ interface Props {
 
 export function JobList({ jobs, onStatusChange, onDelete, onDetail }: Props) {
   return (
-    <div className="space-y-2">
+    <div className="space-y-4">
       {jobs.map((job) => (
         <JobCard key={job.id} job={job} onStatusChange={onStatusChange} onDelete={onDelete} onDetail={onDetail} />
       ))}
