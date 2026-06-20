@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Heart, ExternalLink, Trash2, Plus, ArrowRight } from 'lucide-react'
 import { useAuthStore } from '../store/authStore'
 import { useJobStore } from '../store/jobStore'
@@ -19,6 +19,10 @@ export function WishlistPage() {
   const [showHelp, setShowHelp] = useState(false)
 
   const wishlistJobs = jobs.filter((j) => j.status === 'WISHLIST')
+
+  useEffect(() => {
+    if (token) fetchJobs(token)
+  }, [token])
 
   const handleAdd = async () => {
     if (!token || !input.trim()) return

@@ -1,0 +1,3 @@
+1. waktu buka page wishlist pertama, kosong, ga muncul yang previously diadd. baru muncul habis ngeadd baru. 
+2. Masih ga muncul di depan cardnya ketika didrag, jadi malah di belakang, atau kaya terbatas di section dia yang awal doang habis itu kepotong.
+3. Waktu geser ke rejected/offered, munculin popup untuk dia bisa kasih note. Note ini spesial jadinya ada tag X/V nya gitu, beda dengan note biasa.

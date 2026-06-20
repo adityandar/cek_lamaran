@@ -9,6 +9,8 @@ import {
 } from 'typeorm';
 import { Job } from './job.entity';
 
+export type NoteTag = 'rejected' | 'offered' | 'follow-up' | null;
+
 @Entity()
 export class Note {
   @PrimaryGeneratedColumn('uuid')
@@ -16,6 +18,9 @@ export class Note {
 
   @Column({ type: 'text' })
   content: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  tag: NoteTag;
 
   @CreateDateColumn()
   createdAt: Date;

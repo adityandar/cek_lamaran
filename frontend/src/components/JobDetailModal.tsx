@@ -138,7 +138,12 @@ export function JobDetailModal({ job, onClose, onStatusChange, onUpdate }: Props
               <p className="text-xs text-muted-foreground">Belum ada catatan.</p>
             )}
             {notes.map((note) => (
-              <div key={note.id} className="flex items-start gap-2 bg-muted/50 rounded-lg p-2.5 group">
+              <div key={note.id} className={`flex items-start gap-2 rounded-lg p-2.5 group ${note.tag === 'rejected' ? 'bg-red-50 border border-red-200' : note.tag === 'offered' ? 'bg-emerald-50 border border-emerald-200' : 'bg-muted/50'}`}>
+                {note.tag && (
+                  <span className={`text-xs font-semibold px-1.5 py-0.5 rounded shrink-0 mt-0.5 ${note.tag === 'rejected' ? 'bg-red-200 text-red-800' : 'bg-emerald-200 text-emerald-800'}`}>
+                    {note.tag === 'rejected' ? '✕' : '✓'}
+                  </span>
+                )}
                 <p className="flex-1 text-sm whitespace-pre-wrap">{note.content}</p>
                 <button
                   onClick={() => handleDeleteNote(note.id)}

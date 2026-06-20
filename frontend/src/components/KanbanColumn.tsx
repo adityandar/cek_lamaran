@@ -57,7 +57,7 @@ export function KanbanColumn({ id, label, jobs, onDelete, onDetail, activeId }: 
   const { setNodeRef, isOver } = useDroppable({ id })
 
   return (
-    <div ref={setNodeRef} className={`rounded-xl border bg-card overflow-hidden ${isOver ? 'ring-2 ring-primary' : ''}`}>
+    <div ref={setNodeRef} className={`rounded-xl border bg-card ${isOver ? 'ring-2 ring-primary' : ''}`}>
       <div className={`${COLORS[id]?.header || 'bg-slate-400'} px-3 py-2`}>
         <h3 className="text-sm font-semibold text-white flex items-center justify-between">
           {label}

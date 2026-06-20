@@ -85,10 +85,51 @@ export class JobsService {
     }
   }
 
-  async addNote(jobId: string, content: string, userId: string): Promise<Note> {
+  async resolve(
+    id: string,
+    status: JobStatus,
+    noteContent: string,
+    userId: string,
+  ): Promise<Job> {
+    const job = await this.findOne(id, userId);
+
+    if (LOCKED_STATUSES.includes(job.status)) {
+      throw new BadRequestException(
+        `Cannot change status — job is ${job.status}`,
+      );
+    }
+
+    job.status = status;
+    const saved = await this.jobRepository.save(job);
+
+    if (noteContent?.trim()) {
+      const tag: 'rejected' | 'offered' | null =
+        status === 'REJECTED' ? 'rejected' :
+        status === 'OFFERED' ? 'offered' : null;
+      const note = this.noteRepository.create({
+        jobId: saved.id,
+        content: noteContent.trim(),
+        tag,
+      });
+      await this.noteRepository.save(note);
+    }
+
+    return this.findOne(saved.id, userId);
+  }
+
+  async addNote(
+    jobId: string,
+    content: string,
+    userId: string,
+    tag?: string,
+  ): Promise<Note> {
     const job = await this.findOne(jobId, userId);
-    const note = this.noteRepository.create({ jobId: job.id, content });
-    return this.noteRepository.save(note);
+    const note = this.noteRepository.create({
+      jobId: job.id,
+      content,
+      tag: (tag as Note['tag']) || null,
+    });
+    return this.noteRepository.save(note) as Promise<Note>;
   }
 
   async updateNote(noteId: string, content: string, userId: string): Promise<Note> {

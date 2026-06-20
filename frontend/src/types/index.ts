@@ -2,9 +2,12 @@ export type JobStatus = 'WISHLIST' | 'APPLIED' | 'IN_PROGRESS' | 'REJECTED' | 'O
 
 export const LOCKED_STATUSES: JobStatus[] = ['REJECTED', 'OFFERED'];
 
+export type NoteTag = 'rejected' | 'offered' | 'follow-up' | null;
+
 export interface Note {
   id: string;
   content: string;
+  tag: NoteTag;
   createdAt: string;
   updatedAt: string;
   jobId: string;

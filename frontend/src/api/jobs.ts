@@ -70,6 +70,16 @@ export async function addNote(token: string, jobId: string, content: string) {
   return res.json();
 }
 
+export async function resolveJob(token: string, jobId: string, status: string, note: string) {
+  const res = await fetch(`${API}/${jobId}/resolve`, {
+    method: 'POST',
+    headers: headers(token),
+    body: JSON.stringify({ status, note }),
+  });
+  if (!res.ok) throw new Error('Failed to resolve job');
+  return res.json();
+}
+
 export async function updateNote(token: string, noteId: string, content: string) {
   const res = await fetch(`${API}/notes/${noteId}`, {
     method: 'PATCH',

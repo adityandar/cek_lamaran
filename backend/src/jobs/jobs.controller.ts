@@ -14,6 +14,7 @@ import { UpdateStatusDto } from './dto/update-status.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../decorators/current-user.decorator';
+import type { JobStatus } from '../job.entity';
 
 @UseGuards(JwtAuthGuard)
 @Controller('api/jobs')
@@ -48,6 +49,20 @@ export class JobsController {
     @CurrentUser() user: { id: string },
   ) {
     return this.jobsService.updateStatus(id, dto, user.id);
+  }
+
+  @Post(':id/resolve')
+  resolve(
+    @Param('id') id: string,
+    @Body() body: { status: string; note: string },
+    @CurrentUser() user: { id: string },
+  ) {
+    return this.jobsService.resolve(
+      id,
+      body.status as JobStatus,
+      body.note,
+      user.id,
+    );
   }
 
   @Patch(':id')

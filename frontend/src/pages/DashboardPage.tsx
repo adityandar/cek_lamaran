@@ -10,9 +10,11 @@ import { ViewToggle } from '../components/ViewToggle'
 import { EmptyState } from '../components/EmptyState'
 import { OnboardingPopup } from '../components/OnboardingPopup'
 import { JobDetailModal } from '../components/JobDetailModal'
+import { ResolveNoteDialog } from '../components/ResolveNoteDialog'
 import { Dialog, DialogHeader, DialogTitle } from '../components/ui/dialog'
 import { Button } from '../components/ui/button'
 import type { Job, JobStatus } from '../types'
+import * as jobsApi from '../api/jobs'
 
 export function DashboardPage() {
   const token = useAuthStore((s) => s.token)
@@ -21,6 +23,7 @@ export function DashboardPage() {
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
   const [detailTarget, setDetailTarget] = useState<Job | null>(null)
   const [showHelp, setShowHelp] = useState(false)
+  const [resolveTarget, setResolveTarget] = useState<{ id: string; status: JobStatus } | null>(null)
 
   useEffect(() => {
     if (token) fetchJobs(token)
@@ -31,7 +34,25 @@ export function DashboardPage() {
   }
 
   const handleStatus = (id: string, status: JobStatus) => {
+    if (status === 'REJECTED' || status === 'OFFERED') {
+      setResolveTarget({ id, status })
+      return
+    }
     if (token) updateStatus(token, id, status)
+  }
+
+  const handleResolveConfirm = async (note: string) => {
+    if (!token || !resolveTarget) return
+    const { id, status } = resolveTarget
+    try {
+      const updated = await jobsApi.resolveJob(token, id, status, note)
+      useJobStore.setState((s) => ({
+        jobs: s.jobs.map((j) => (j.id === id ? updated : j)),
+      }))
+    } catch (e: unknown) {
+      useJobStore.setState({ error: (e as Error).message })
+    }
+    setResolveTarget(null)
   }
 
   const handleUpdate = (id: string, data: { companyName?: string; role?: string }) => {
@@ -123,6 +144,13 @@ export function DashboardPage() {
         onClose={() => setDetailTarget(null)}
         onStatusChange={handleStatus}
         onUpdate={handleUpdate}
+      />
+
+      <ResolveNoteDialog
+        open={!!resolveTarget}
+        targetStatus={resolveTarget?.status ?? null}
+        onConfirm={handleResolveConfirm}
+        onCancel={() => setResolveTarget(null)}
       />
 
       <Dialog open={showHelp} onOpenChange={setShowHelp}>
