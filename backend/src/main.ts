@@ -2,6 +2,9 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 
+// Force UTC timezone so PostgreSQL timestamps are read correctly
+process.env.TZ = 'UTC';
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 

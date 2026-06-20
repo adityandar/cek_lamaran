@@ -97,3 +97,13 @@ export async function deleteNote(token: string, noteId: string) {
   });
   if (!res.ok) throw new Error('Failed to delete note');
 }
+
+export async function scrapeJob(token: string, url: string) {
+  const res = await fetch('/api/scrape', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ url }),
+  });
+  if (!res.ok) return null;
+  return res.json();
+}
