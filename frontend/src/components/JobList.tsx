@@ -5,13 +5,14 @@ interface Props {
   jobs: Job[]
   onStatusChange: (id: string, status: JobStatus) => void
   onDelete: (id: string) => void
+  onDetail: (id: string) => void
 }
 
-export function JobList({ jobs, onStatusChange, onDelete }: Props) {
+export function JobList({ jobs, onStatusChange, onDelete, onDetail }: Props) {
   return (
     <div className="space-y-2">
       {jobs.map((job) => (
-        <JobCard key={job.id} job={job} onStatusChange={onStatusChange} onDelete={onDelete} compact />
+        <JobCard key={job.id} job={job} onStatusChange={onStatusChange} onDelete={onDelete} onDetail={onDetail} />
       ))}
     </div>
   )

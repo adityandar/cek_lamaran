@@ -1,4 +1,5 @@
-import { IsString, IsOptional, MinLength } from 'class-validator';
+import { IsString, IsOptional, MinLength, IsEnum } from 'class-validator';
+import type { JobStatus } from '../../job.entity';
 
 export class CreateJobDto {
   @IsString()
@@ -8,4 +9,12 @@ export class CreateJobDto {
   @IsOptional()
   @IsString()
   companyName?: string;
+
+  @IsOptional()
+  @IsString()
+  role?: string;
+
+  @IsOptional()
+  @IsEnum(['WISHLIST', 'APPLIED', 'IN_PROGRESS', 'REJECTED', 'OFFERED'])
+  status?: JobStatus;
 }

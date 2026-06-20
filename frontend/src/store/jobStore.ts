@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { Job } from '../types';
+import type { Job, JobStatus } from '../types';
 import * as jobsApi from '../api/jobs';
 
 type ViewMode = 'LIST' | 'KANBAN';
@@ -10,8 +10,9 @@ interface JobState {
   loading: boolean;
   error: string | null;
   fetchJobs: (token: string) => Promise<void>;
-  addJob: (token: string, input: string, companyName?: string) => Promise<void>;
-  updateStatus: (token: string, id: string, status: string) => Promise<void>;
+  addJob: (token: string, input: string, companyName?: string, role?: string, status?: string) => Promise<void>;
+  updateStatus: (token: string, id: string, status: JobStatus) => Promise<void>;
+  updateJob: (token: string, id: string, data: { companyName?: string; role?: string }) => Promise<void>;
   removeJob: (token: string, id: string) => Promise<void>;
   setViewMode: (mode: ViewMode) => void;
 }
@@ -32,9 +33,9 @@ export const useJobStore = create<JobState>((set) => ({
     }
   },
 
-  addJob: async (token, input, companyName) => {
+  addJob: async (token, input, companyName, role, status) => {
     try {
-      const job = await jobsApi.createJob(token, input, companyName);
+      const job = await jobsApi.createJob(token, input, companyName, role, status);
       set((s) => ({ jobs: [job, ...s.jobs] }));
     } catch (e: unknown) {
       set({ error: (e as Error).message });
@@ -44,6 +45,17 @@ export const useJobStore = create<JobState>((set) => ({
   updateStatus: async (token, id, status) => {
     try {
       const updated = await jobsApi.updateJobStatus(token, id, status);
+      set((s) => ({
+        jobs: s.jobs.map((j) => (j.id === id ? updated : j)),
+      }));
+    } catch (e: unknown) {
+      set({ error: (e as Error).message });
+    }
+  },
+
+  updateJob: async (token, id, data) => {
+    try {
+      const updated = await jobsApi.updateJob(token, id, data);
       set((s) => ({
         jobs: s.jobs.map((j) => (j.id === id ? updated : j)),
       }));

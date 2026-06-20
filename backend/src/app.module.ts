@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module';
 import { JobsModule } from './jobs/jobs.module';
 import { User } from './user.entity';
 import { Job } from './job.entity';
+import { Note } from './note.entity';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { Job } from './job.entity';
       useFactory: (config: ConfigService) => ({
         type: 'postgres',
         url: config.get<string>('DATABASE_URL'),
-        entities: [User, Job],
+        entities: [User, Job, Note],
         synchronize: true,
       }),
     }),

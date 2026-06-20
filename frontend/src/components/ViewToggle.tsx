@@ -21,7 +21,7 @@ interface Props {
 
 export function ViewToggle({ viewMode, onViewChange, activeFilter, onFilterChange }: Props) {
   return (
-    <div className="flex items-center justify-between mb-4">
+    <div className="flex items-center justify-between mb-4 gap-2 flex-wrap">
       <div className="flex gap-1 flex-wrap">
         {FILTERS.map((f) => (
           <Button
@@ -34,7 +34,7 @@ export function ViewToggle({ viewMode, onViewChange, activeFilter, onFilterChang
           </Button>
         ))}
       </div>
-      <div className="flex border rounded-lg overflow-hidden">
+      <div className="flex border rounded-lg overflow-hidden shrink-0">
         <Button
           variant={viewMode === 'LIST' ? 'default' : 'ghost'}
           size="sm"

@@ -4,11 +4,15 @@ import {
   Column,
   UpdateDateColumn,
   ManyToOne,
+  OneToMany,
   JoinColumn,
 } from 'typeorm';
 import { User } from './user.entity';
+import { Note } from './note.entity';
 
-export type JobStatus = 'APPLIED' | 'IN_PROGRESS' | 'REJECTED' | 'OFFERED';
+export type JobStatus = 'WISHLIST' | 'APPLIED' | 'IN_PROGRESS' | 'REJECTED' | 'OFFERED';
+
+export const LOCKED_STATUSES: JobStatus[] = ['REJECTED', 'OFFERED'];
 
 @Entity()
 export class Job {
@@ -17,6 +21,9 @@ export class Job {
 
   @Column({ type: 'varchar' })
   companyName: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  role: string | undefined;
 
   @Column({ type: 'varchar', default: 'APPLIED' })
   status: JobStatus;
@@ -29,6 +36,9 @@ export class Job {
 
   @Column({ type: 'varchar', nullable: true })
   companyDomain: string | undefined;
+
+  @OneToMany(() => Note, (note) => note.job, { cascade: true })
+  notes: Note[];
 
   @UpdateDateColumn()
   updatedAt: Date;

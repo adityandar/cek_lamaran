@@ -1,9 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Job, JobStatus } from '../job.entity';
+import { Job, JobStatus, LOCKED_STATUSES } from '../job.entity';
+import { Note } from '../note.entity';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateStatusDto } from './dto/update-status.dto';
+import { UpdateJobDto } from './dto/update-job.dto';
 import { SmartInputParser } from './parser/smart-input.parser';
 
 @Injectable()
@@ -11,6 +17,8 @@ export class JobsService {
   constructor(
     @InjectRepository(Job)
     private jobRepository: Repository<Job>,
+    @InjectRepository(Note)
+    private noteRepository: Repository<Note>,
     private parser: SmartInputParser,
   ) {}
 
@@ -21,10 +29,22 @@ export class JobsService {
     });
   }
 
+  async findOne(id: string, userId: string): Promise<Job> {
+    const job = await this.jobRepository.findOne({
+      where: { id, userId },
+      relations: { notes: true },
+    });
+    if (!job) throw new NotFoundException('Job not found');
+    job.notes?.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+    return job!;
+  }
+
   async create(dto: CreateJobDto, userId: string): Promise<Job> {
-    const parsed = this.parser.parse(dto.input, dto.companyName);
+    const parsed = await this.parser.parse(dto.input, dto.companyName, dto.role);
     const job = this.jobRepository.create({
       ...parsed,
+      role: dto.role || parsed.role,
+      status: dto.status || 'APPLIED',
       userId,
     });
     return this.jobRepository.save(job) as Promise<Job>;
@@ -35,13 +55,26 @@ export class JobsService {
     dto: UpdateStatusDto,
     userId: string,
   ): Promise<Job> {
-    const job = await this.jobRepository.findOne({
-      where: { id, userId },
-    });
-    if (!job) {
-      throw new NotFoundException('Job not found');
+    const job = await this.findOne(id, userId);
+
+    if (LOCKED_STATUSES.includes(job.status)) {
+      throw new BadRequestException(
+        `Cannot change status — job is ${job.status}`,
+      );
     }
+
     job.status = dto.status;
+    return this.jobRepository.save(job);
+  }
+
+  async update(
+    id: string,
+    dto: UpdateJobDto,
+    userId: string,
+  ): Promise<Job> {
+    const job = await this.findOne(id, userId);
+    if (dto.companyName !== undefined) job.companyName = dto.companyName;
+    if (dto.role !== undefined) job.role = dto.role;
     return this.jobRepository.save(job);
   }
 
@@ -50,5 +83,34 @@ export class JobsService {
     if (result.affected === 0) {
       throw new NotFoundException('Job not found');
     }
+  }
+
+  async addNote(jobId: string, content: string, userId: string): Promise<Note> {
+    const job = await this.findOne(jobId, userId);
+    const note = this.noteRepository.create({ jobId: job.id, content });
+    return this.noteRepository.save(note);
+  }
+
+  async updateNote(noteId: string, content: string, userId: string): Promise<Note> {
+    const note = await this.noteRepository.findOne({
+      where: { id: noteId },
+      relations: { job: true },
+    });
+    if (!note || note.job.userId !== userId) {
+      throw new NotFoundException('Note not found');
+    }
+    note.content = content;
+    return this.noteRepository.save(note);
+  }
+
+  async deleteNote(noteId: string, userId: string): Promise<void> {
+    const note = await this.noteRepository.findOne({
+      where: { id: noteId },
+      relations: { job: true },
+    });
+    if (!note || note.job.userId !== userId) {
+      throw new NotFoundException('Note not found');
+    }
+    await this.noteRepository.remove(note);
   }
 }
