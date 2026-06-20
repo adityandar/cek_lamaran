@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { JobsModule } from './jobs/jobs.module';
+import { ScraperModule } from './scraper/scraper.module';
 import { User } from './user.entity';
 import { Job } from './job.entity';
 import { Note } from './note.entity';
@@ -22,6 +23,7 @@ import { Note } from './note.entity';
     }),
     AuthModule,
     JobsModule,
+    ScraperModule,
   ],
 })
 export class AppModule {}
