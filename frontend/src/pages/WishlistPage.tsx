@@ -5,6 +5,7 @@ import { useJobStore } from '../store/jobStore'
 import { Layout } from '../components/Layout'
 import { JobInput } from '../components/JobInput'
 import { Dialog, DialogHeader, DialogTitle } from '../components/ui/dialog'
+import { DevContact } from '../components/DevContact'
 import type { JobStatus } from '../types'
 import * as jobsApi from '../api/jobs'
 
@@ -80,6 +81,7 @@ export function WishlistPage() {
           <p>Simpan lowongan yang belum kamu apply di sini.</p>
           <p>Setelah kamu apply, tekan tombol <strong>Apply</strong> untuk memindahkannya ke halaman Active.</p>
         </div>
+        <DevContact />
         <div className="flex justify-end mt-4">
           <button onClick={() => setShowHelp(false)} className="font-bold text-sm px-4 py-2 border-4 border-black bg-white hover:bg-gray-100 shadow-[4px_4px_0_0_#000] hover:shadow-[2px_2px_0_0_#000] hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
             Tutup

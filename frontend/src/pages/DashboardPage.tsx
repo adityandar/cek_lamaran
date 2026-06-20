@@ -11,6 +11,7 @@ import { EmptyState } from '../components/EmptyState'
 import { OnboardingPopup } from '../components/OnboardingPopup'
 import { JobDetailModal } from '../components/JobDetailModal'
 import { ResolveNoteDialog } from '../components/ResolveNoteDialog'
+import { DevContact } from '../components/DevContact'
 import { Dialog, DialogHeader, DialogTitle } from '../components/ui/dialog'
 import type { Job, JobStatus } from '../types'
 import * as jobsApi from '../api/jobs'
@@ -232,6 +233,7 @@ export function DashboardPage() {
           <p><span className="font-black">Rejected</span> — Ditolak. Status final, tidak bisa diubah.</p>
           <p><span className="font-black">Offered</span> — Dapat offer. Status final, tidak bisa diubah.</p>
         </div>
+        <DevContact />
         <div className="flex justify-end mt-4">
           <button onClick={() => setShowHelp(false)} className="font-bold text-sm px-4 py-2 border-4 border-black bg-white hover:bg-gray-100 shadow-[4px_4px_0_0_#000] hover:shadow-[2px_2px_0_0_#000] hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
             Tutup

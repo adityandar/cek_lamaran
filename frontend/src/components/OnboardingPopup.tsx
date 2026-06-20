@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { List, Columns3, ArrowRight, Ban, CheckCircle } from 'lucide-react'
 import { Dialog, DialogHeader, DialogTitle } from './ui/dialog'
+import { DevContact } from './DevContact'
 
 const STORAGE_KEY = 'ceklamaran_onboarding_done'
 
@@ -65,6 +66,7 @@ export function OnboardingPopup() {
           </span>
         </div>
       </div>
+      <DevContact />
       <div className="flex justify-end mt-4">
         <button onClick={dismiss} className="font-bold text-sm px-6 py-2 border-4 border-black bg-black text-white shadow-[4px_4px_0_0_#000] hover:shadow-[2px_2px_0_0_#000] hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
           Mulai
