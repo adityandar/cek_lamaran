@@ -1,11 +1,12 @@
 import { useState } from 'react'
-import { Heart, ExternalLink, Trash2, Plus } from 'lucide-react'
+import { Heart, ExternalLink, Trash2, Plus, ArrowRight } from 'lucide-react'
 import { useAuthStore } from '../store/authStore'
 import { useJobStore } from '../store/jobStore'
 import { Layout } from '../components/Layout'
 import { Input } from '../components/ui/input'
 import { Button } from '../components/ui/button'
 import { Card, CardContent } from '../components/ui/card'
+import { Dialog, DialogHeader, DialogTitle } from '../components/ui/dialog'
 import type { JobStatus } from '../types'
 import * as jobsApi from '../api/jobs'
 
@@ -15,6 +16,7 @@ export function WishlistPage() {
   const [input, setInput] = useState('')
   const [companyName, setCompanyName] = useState('')
   const [role, setRole] = useState('')
+  const [showHelp, setShowHelp] = useState(false)
 
   const wishlistJobs = jobs.filter((j) => j.status === 'WISHLIST')
 
@@ -35,7 +37,7 @@ export function WishlistPage() {
   }
 
   return (
-    <Layout>
+    <Layout onHelp={() => setShowHelp(true)}>
       <div className="mb-6">
         <h2 className="text-lg font-semibold flex items-center gap-2 mb-4">
           <Heart className="h-5 w-5 text-primary" />
@@ -79,7 +81,8 @@ export function WishlistPage() {
               </div>
               <div className="flex items-center gap-1 shrink-0">
                 <Button variant="default" size="sm" onClick={() => handleMoveToApplied(job.id)}>
-                  Applied
+                  <ArrowRight className="h-3 w-3 mr-1" />
+                  Apply
                 </Button>
                 <button onClick={() => token && removeJob(token, job.id)} className="text-muted-foreground hover:text-destructive p-1.5">
                   <Trash2 className="h-4 w-4" />
@@ -89,6 +92,19 @@ export function WishlistPage() {
           </Card>
         ))}
       </div>
+
+      <Dialog open={showHelp} onOpenChange={setShowHelp}>
+        <DialogHeader>
+          <DialogTitle>Wishlist</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-3 text-sm text-muted-foreground">
+          <p>Simpan lowongan yang belum kamu apply di sini.</p>
+          <p>Setelah kamu apply, tekan tombol <strong>Apply</strong> untuk memindahkannya ke halaman Active.</p>
+        </div>
+        <div className="flex justify-end mt-4">
+          <Button variant="outline" onClick={() => setShowHelp(false)}>Tutup</Button>
+        </div>
+      </Dialog>
     </Layout>
   )
 }
