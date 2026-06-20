@@ -12,7 +12,6 @@ import { OnboardingPopup } from '../components/OnboardingPopup'
 import { JobDetailModal } from '../components/JobDetailModal'
 import { ResolveNoteDialog } from '../components/ResolveNoteDialog'
 import { Dialog, DialogHeader, DialogTitle } from '../components/ui/dialog'
-import { Button } from '../components/ui/button'
 import type { Job, JobStatus } from '../types'
 import * as jobsApi from '../api/jobs'
 
@@ -25,6 +24,10 @@ const STATUS_ORDER: Record<JobStatus, number> = {
   REJECTED: 3,
   OFFERED: 4,
 }
+
+const sortBtnBase = 'font-bold border-2 border-black text-xs px-3 py-1.5 transition-all'
+const sortBtnActive = `${sortBtnBase} bg-black text-white shadow-[2px_2px_0_0_#000]`
+const sortBtnInactive = `${sortBtnBase} bg-white hover:bg-gray-100 shadow-[2px_2px_0_0_#000] hover:shadow-[1px_1px_0_0_#000] hover:translate-x-[1px] hover:translate-y-[1px]`
 
 export function DashboardPage() {
   const token = useAuthStore((s) => s.token)
@@ -109,7 +112,7 @@ export function DashboardPage() {
       <JobInput onAdd={handleAdd} />
 
       {error && (
-        <div className="flex items-center gap-2 bg-destructive/10 text-destructive text-sm rounded-lg p-3 mb-4 border border-destructive/20">
+        <div className="flex items-center gap-2 bg-red-100 border-4 border-red-600 text-red-700 font-bold text-sm p-3 mb-4">
           <AlertCircle className="h-4 w-4 shrink-0" />
           <span>{error}. Pastikan backend berjalan.</span>
         </div>
@@ -117,34 +120,30 @@ export function DashboardPage() {
 
       {loading ? (
         <div className="flex items-center justify-center py-20">
-          <div className="animate-pulse text-muted-foreground">Memuat data...</div>
+          <div className="font-bold">Memuat data...</div>
         </div>
       ) : activeJobs.length === 0 ? (
         <EmptyState />
       ) : (
         <>
           <div className="flex items-center justify-between mb-4 gap-2 flex-wrap">
-            <div className="flex items-center gap-2">
-              <ViewToggle
-                viewMode={viewMode}
-                onViewChange={setViewMode}
-                activeFilter={filter}
-                onFilterChange={setFilter}
-              />
-            </div>
+            <ViewToggle
+              viewMode={viewMode}
+              onViewChange={setViewMode}
+              activeFilter={filter}
+              onFilterChange={setFilter}
+            />
 
             <div className="flex items-center gap-1">
-              <ArrowUpDown className="h-3.5 w-3.5 text-muted-foreground" />
+              <ArrowUpDown className="h-3.5 w-3.5" />
               {(['newest', 'oldest', 'status'] as const).filter(s => viewMode === 'LIST' || s !== 'status').map((s) => (
-                <Button
+                <button
                   key={s}
-                  variant={sortBy === s ? 'default' : 'ghost'}
-                  size="sm"
                   onClick={() => setSortBy(s)}
-                  className="text-xs capitalize"
+                  className={sortBy === s ? sortBtnActive : sortBtnInactive}
                 >
                   {s === 'newest' ? 'Terbaru' : s === 'oldest' ? 'Terlama' : 'Status'}
-                </Button>
+                </button>
               ))}
             </div>
           </div>
@@ -171,12 +170,16 @@ export function DashboardPage() {
         <DialogHeader>
           <DialogTitle>Hapus job ini?</DialogTitle>
         </DialogHeader>
-        <p className="text-sm text-muted-foreground mb-4">
+        <p className="text-sm font-medium mb-4">
           Job yang dihapus tidak bisa dikembalikan.
         </p>
         <div className="flex justify-end gap-2">
-          <Button variant="outline" onClick={() => setDeleteTarget(null)}>Batal</Button>
-          <Button variant="destructive" onClick={confirmDelete}>Hapus</Button>
+          <button onClick={() => setDeleteTarget(null)} className="font-bold text-sm px-4 py-2 border-4 border-black bg-white hover:bg-gray-100 shadow-[4px_4px_0_0_#000] hover:shadow-[2px_2px_0_0_#000] hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
+            Batal
+          </button>
+          <button onClick={confirmDelete} className="font-bold text-sm px-4 py-2 border-4 border-black bg-red-500 text-white hover:bg-red-600 shadow-[4px_4px_0_0_#000] hover:shadow-[2px_2px_0_0_#000] hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
+            Hapus
+          </button>
         </div>
       </Dialog>
 
@@ -199,14 +202,16 @@ export function DashboardPage() {
         <DialogHeader>
           <DialogTitle>Penjelasan Status</DialogTitle>
         </DialogHeader>
-        <div className="space-y-3 text-sm">
-          <p><span className="font-medium">Applied</span> — Lamaran sudah dikirim.</p>
-          <p><span className="font-medium">In Progress</span> — Ada perkembangan (interview, dll).</p>
-          <p><span className="font-medium">Rejected</span> — Ditolak. Status final, tidak bisa diubah.</p>
-          <p><span className="font-medium">Offered</span> — Dapat offer. Status final, tidak bisa diubah.</p>
+        <div className="space-y-3 text-sm font-medium">
+          <p><span className="font-black">Applied</span> — Lamaran sudah dikirim.</p>
+          <p><span className="font-black">In Progress</span> — Ada perkembangan (interview, dll).</p>
+          <p><span className="font-black">Rejected</span> — Ditolak. Status final, tidak bisa diubah.</p>
+          <p><span className="font-black">Offered</span> — Dapat offer. Status final, tidak bisa diubah.</p>
         </div>
         <div className="flex justify-end mt-4">
-          <Button variant="outline" onClick={() => setShowHelp(false)}>Tutup</Button>
+          <button onClick={() => setShowHelp(false)} className="font-bold text-sm px-4 py-2 border-4 border-black bg-white hover:bg-gray-100 shadow-[4px_4px_0_0_#000] hover:shadow-[2px_2px_0_0_#000] hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
+            Tutup
+          </button>
         </div>
       </Dialog>
     </Layout>

@@ -1,7 +1,6 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 import { LogOut, Briefcase, Heart, HelpCircle } from 'lucide-react'
 import { useAuthStore } from '../store/authStore'
-import { Button } from './ui/button'
 
 interface Props {
   children: React.ReactNode
@@ -15,42 +14,50 @@ export function Layout({ children, onHelp }: Props) {
   const isWishlist = location.pathname === '/wishlist'
 
   return (
-    <div className="min-h-screen bg-muted/30">
-      <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur">
-        <div className="max-w-5xl mx-auto flex h-14 items-center justify-between px-6">
+    <div className="min-h-screen bg-[#FFFDF7]">
+      <header className="sticky top-0 z-40 bg-[#FFE600] border-b-4 border-black shadow-[0_6px_0_0_#000]">
+        <div className="max-w-5xl mx-auto flex h-16 items-center justify-between px-6">
           <div className="flex items-center gap-6">
-            <div className="flex items-center gap-2 font-semibold text-lg">
-              <Briefcase className="h-5 w-5 text-primary" />
-              <span>Job Tracker</span>
+            <div className="flex items-center gap-2 font-black text-xl tracking-tight">
+              <div className="bg-black p-1.5">
+                <Briefcase className="h-5 w-5 text-[#FFE600]" />
+              </div>
+              <span className="-rotate-1">CekLamaran</span>
             </div>
-            <nav className="flex items-center gap-1 text-sm">
-              <Button
-                variant={isWishlist ? 'ghost' : 'secondary'}
-                size="sm"
-                onClick={() => navigate('/')}
+            <nav className="flex items-center gap-2 text-sm">
+              <button
+                onClick={() => navigate('/dashboard')}
+                className={`font-bold px-3 py-1.5 border-2 border-black transition-all ${
+                  isWishlist
+                    ? 'bg-white hover:bg-gray-100 shadow-[3px_3px_0_0_#000] hover:shadow-[1px_1px_0_0_#000] hover:translate-x-[2px] hover:translate-y-[2px]'
+                    : 'bg-black text-white shadow-[3px_3px_0_0_#000]'
+                }`}
               >
-                <Briefcase className="h-4 w-4 mr-1" />
+                <Briefcase className="h-4 w-4 inline mr-1 -mt-0.5" />
                 Active
-              </Button>
-              <Button
-                variant={isWishlist ? 'secondary' : 'ghost'}
-                size="sm"
+              </button>
+              <button
                 onClick={() => navigate('/wishlist')}
+                className={`font-bold px-3 py-1.5 border-2 border-black transition-all ${
+                  isWishlist
+                    ? 'bg-black text-white shadow-[3px_3px_0_0_#000]'
+                    : 'bg-white hover:bg-gray-100 shadow-[3px_3px_0_0_#000] hover:shadow-[1px_1px_0_0_#000] hover:translate-x-[2px] hover:translate-y-[2px]'
+                }`}
               >
-                <Heart className="h-4 w-4 mr-1" />
+                <Heart className="h-4 w-4 inline mr-1 -mt-0.5" />
                 Wishlist
-              </Button>
+              </button>
             </nav>
           </div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Button variant="ghost" size="icon" onClick={onHelp} title="Bantuan">
+          <div className="flex items-center gap-2 text-sm">
+            <button onClick={onHelp} className="p-1.5 border-2 border-black bg-white shadow-[3px_3px_0_0_#000] hover:shadow-[1px_1px_0_0_#000] hover:translate-x-[2px] hover:translate-y-[2px] transition-all" title="Bantuan">
               <HelpCircle className="h-4 w-4" />
-            </Button>
-            <span className="hidden sm:inline">{user?.email}</span>
-            <Button variant="ghost" size="sm" onClick={logout}>
-              <LogOut className="h-4 w-4 mr-1" />
+            </button>
+            <span className="hidden sm:inline text-sm font-bold">{user?.email}</span>
+            <button onClick={logout} className="font-bold px-3 py-1.5 border-2 border-black bg-white hover:bg-gray-100 shadow-[3px_3px_0_0_#000] hover:shadow-[1px_1px_0_0_#000] hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
+              <LogOut className="h-4 w-4 inline mr-1 -mt-0.5" />
               Logout
-            </Button>
+            </button>
           </div>
         </div>
       </header>
