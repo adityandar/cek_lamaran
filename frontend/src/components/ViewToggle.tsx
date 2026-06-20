@@ -22,18 +22,21 @@ interface Props {
 export function ViewToggle({ viewMode, onViewChange, activeFilter, onFilterChange }: Props) {
   return (
     <div className="flex items-center justify-between mb-4 gap-2 flex-wrap">
-      <div className="flex gap-1 flex-wrap">
-        {FILTERS.map((f) => (
-          <Button
-            key={f.id}
-            variant={activeFilter === f.id ? 'default' : 'ghost'}
-            size="sm"
-            onClick={() => onFilterChange(f.id)}
-          >
-            {f.label}
-          </Button>
-        ))}
-      </div>
+      {viewMode === 'LIST' && (
+        <div className="flex gap-1 flex-wrap">
+          {FILTERS.map((f) => (
+            <Button
+              key={f.id}
+              variant={activeFilter === f.id ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => onFilterChange(f.id)}
+            >
+              {f.label}
+            </Button>
+          ))}
+        </div>
+      )}
+      {viewMode === 'KANBAN' && <div />}
       <div className="flex border rounded-lg overflow-hidden shrink-0">
         <Button
           variant={viewMode === 'LIST' ? 'default' : 'ghost'}

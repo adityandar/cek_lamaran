@@ -1,3 +1,4 @@
+import { useNavigate, useLocation } from 'react-router-dom'
 import { LogOut, Briefcase, Heart, HelpCircle } from 'lucide-react'
 import { useAuthStore } from '../store/authStore'
 import { Button } from './ui/button'
@@ -9,7 +10,9 @@ interface Props {
 
 export function Layout({ children, onHelp }: Props) {
   const { user, logout } = useAuthStore()
-  const isWishlist = window.location.pathname === '/wishlist'
+  const navigate = useNavigate()
+  const location = useLocation()
+  const isWishlist = location.pathname === '/wishlist'
 
   return (
     <div className="min-h-screen bg-muted/30">
@@ -24,7 +27,7 @@ export function Layout({ children, onHelp }: Props) {
               <Button
                 variant={isWishlist ? 'ghost' : 'secondary'}
                 size="sm"
-                onClick={() => window.location.href = '/'}
+                onClick={() => navigate('/')}
               >
                 <Briefcase className="h-4 w-4 mr-1" />
                 Active
@@ -32,7 +35,7 @@ export function Layout({ children, onHelp }: Props) {
               <Button
                 variant={isWishlist ? 'secondary' : 'ghost'}
                 size="sm"
-                onClick={() => window.location.href = '/wishlist'}
+                onClick={() => navigate('/wishlist')}
               >
                 <Heart className="h-4 w-4 mr-1" />
                 Wishlist
