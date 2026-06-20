@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { AlertCircle } from 'lucide-react'
+import { useEffect, useState, useMemo } from 'react'
+import { AlertCircle, ArrowUpDown } from 'lucide-react'
 import { useAuthStore } from '../store/authStore'
 import { useJobStore } from '../store/jobStore'
 import { Layout } from '../components/Layout'
@@ -16,10 +16,21 @@ import { Button } from '../components/ui/button'
 import type { Job, JobStatus } from '../types'
 import * as jobsApi from '../api/jobs'
 
+type SortBy = 'newest' | 'oldest' | 'status'
+
+const STATUS_ORDER: Record<JobStatus, number> = {
+  WISHLIST: 0,
+  APPLIED: 1,
+  IN_PROGRESS: 2,
+  REJECTED: 3,
+  OFFERED: 4,
+}
+
 export function DashboardPage() {
   const token = useAuthStore((s) => s.token)
   const { jobs, viewMode, loading, error, fetchJobs, addJob, updateStatus, updateJob, removeJob, setViewMode } = useJobStore()
   const [filter, setFilter] = useState<JobStatus | 'ALL'>('ALL')
+  const [sortBy, setSortBy] = useState<SortBy>('newest')
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
   const [detailTarget, setDetailTarget] = useState<Job | null>(null)
   const [showHelp, setShowHelp] = useState(false)
@@ -79,6 +90,18 @@ export function DashboardPage() {
   const activeJobs = jobs.filter((j) => j.status !== 'WISHLIST')
   const filtered = filter === 'ALL' ? activeJobs : activeJobs.filter((j) => j.status === filter)
 
+  const sorted = useMemo(() => {
+    const list = [...filtered]
+    if (sortBy === 'newest') {
+      list.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+    } else if (sortBy === 'oldest') {
+      list.sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime())
+    } else if (sortBy === 'status') {
+      list.sort((a, b) => STATUS_ORDER[a.status] - STATUS_ORDER[b.status])
+    }
+    return list
+  }, [filtered, sortBy])
+
   return (
     <Layout onHelp={() => setShowHelp(true)}>
       <OnboardingPopup />
@@ -100,23 +123,42 @@ export function DashboardPage() {
         <EmptyState />
       ) : (
         <>
-          <ViewToggle
-            viewMode={viewMode}
-            onViewChange={setViewMode}
-            activeFilter={filter}
-            onFilterChange={setFilter}
-          />
+          <div className="flex items-center justify-between mb-4 gap-2 flex-wrap">
+            <div className="flex items-center gap-2">
+              <ViewToggle
+                viewMode={viewMode}
+                onViewChange={setViewMode}
+                activeFilter={filter}
+                onFilterChange={setFilter}
+              />
+            </div>
+
+            <div className="flex items-center gap-1">
+              <ArrowUpDown className="h-3.5 w-3.5 text-muted-foreground" />
+              {(['newest', 'oldest', 'status'] as const).filter(s => viewMode === 'LIST' || s !== 'status').map((s) => (
+                <Button
+                  key={s}
+                  variant={sortBy === s ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setSortBy(s)}
+                  className="text-xs capitalize"
+                >
+                  {s === 'newest' ? 'Terbaru' : s === 'oldest' ? 'Terlama' : 'Status'}
+                </Button>
+              ))}
+            </div>
+          </div>
 
           {viewMode === 'LIST' ? (
             <JobList
-              jobs={filtered}
+              jobs={sorted}
               onStatusChange={handleStatus}
               onDelete={handleDelete}
               onDetail={handleDetail}
             />
           ) : (
             <KanbanBoard
-              jobs={filtered}
+              jobs={sorted}
               onStatusChange={handleStatus}
               onDelete={handleDelete}
               onDetail={handleDetail}

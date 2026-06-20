@@ -1,0 +1,2 @@
+1. tambahkan filter untuk sort by nya dari update terbaru / terlama, atau berdasarkan status. sort by status hanya ada di list, kalau kanban hanya by time
+2. Harus apply mekanisme yang sama di wishlist samain dengan yang input active. Harus dibuat shared agar tidak DRY.

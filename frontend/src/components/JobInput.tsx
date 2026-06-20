@@ -7,9 +7,11 @@ import { useAuthStore } from '../store/authStore'
 
 interface Props {
   onAdd: (input: string, companyName?: string, role?: string) => void
+  submitLabel?: string
+  hint?: string
 }
 
-export function JobInput({ onAdd }: Props) {
+export function JobInput({ onAdd, submitLabel = 'Tambah', hint }: Props) {
   const token = useAuthStore((s) => s.token)
   const [input, setInput] = useState('')
   const [companyName, setCompanyName] = useState('')
@@ -85,7 +87,7 @@ export function JobInput({ onAdd }: Props) {
         )}
         <Button type="submit" disabled={!input.trim()} className="h-10 shrink-0">
           <Plus className="h-4 w-4 mr-1" />
-          Tambah
+          {submitLabel}
         </Button>
       </div>
 
@@ -113,10 +115,10 @@ export function JobInput({ onAdd }: Props) {
 
       {!scrapeError && input.trim() && (
         <p className="text-xs text-muted-foreground ml-1">
-          {isUrl
+          {hint || (isUrl
             ? '🔗 Link — klik "Check Detail" untuk isi otomatis'
             : '📝 Teks — kata pertama jadi nama perusahaan default'
-          }
+          )}
         </p>
       )}
     </form>

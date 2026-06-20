@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
-import { Heart, ExternalLink, Trash2, Plus, ArrowRight } from 'lucide-react'
+import { Heart, ExternalLink, Trash2, ArrowRight } from 'lucide-react'
 import { useAuthStore } from '../store/authStore'
 import { useJobStore } from '../store/jobStore'
 import { Layout } from '../components/Layout'
-import { Input } from '../components/ui/input'
+import { JobInput } from '../components/JobInput'
 import { Button } from '../components/ui/button'
 import { Card, CardContent } from '../components/ui/card'
 import { Dialog, DialogHeader, DialogTitle } from '../components/ui/dialog'
@@ -13,9 +13,6 @@ import * as jobsApi from '../api/jobs'
 export function WishlistPage() {
   const token = useAuthStore((s) => s.token)
   const { jobs, fetchJobs, removeJob, updateStatus } = useJobStore()
-  const [input, setInput] = useState('')
-  const [companyName, setCompanyName] = useState('')
-  const [role, setRole] = useState('')
   const [showHelp, setShowHelp] = useState(false)
 
   const wishlistJobs = jobs.filter((j) => j.status === 'WISHLIST')
@@ -24,15 +21,10 @@ export function WishlistPage() {
     if (token) fetchJobs(token)
   }, [token])
 
-  const handleAdd = async () => {
-    if (!token || !input.trim()) return
-    try {
-      await jobsApi.createJob(token, input.trim(), companyName.trim() || undefined, role.trim() || undefined, 'WISHLIST')
-      await fetchJobs(token)
-      setInput('')
-      setCompanyName('')
-      setRole('')
-    } catch {}
+  const handleAdd = async (input: string, companyName?: string, role?: string) => {
+    if (!token) return
+    await jobsApi.createJob(token, input, companyName, role, 'WISHLIST')
+    await fetchJobs(token)
   }
 
   const handleMoveToApplied = async (id: string) => {
@@ -47,20 +39,7 @@ export function WishlistPage() {
           <Heart className="h-5 w-5 text-primary" />
           Wishlist
         </h2>
-        <div className="space-y-2">
-          <Input
-            placeholder="Tempel link atau catat lowongan..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-          />
-          <div className="flex gap-2">
-            <Input placeholder="Nama perusahaan (opsional)" value={companyName} onChange={(e) => setCompanyName(e.target.value)} />
-            <Input placeholder="Posisi (opsional)" value={role} onChange={(e) => setRole(e.target.value)} />
-            <Button onClick={handleAdd} disabled={!input.trim()}>
-              <Plus className="h-4 w-4 mr-1" /> Simpan
-            </Button>
-          </div>
-        </div>
+        <JobInput onAdd={handleAdd} submitLabel="Simpan" hint="📝 Simpan lowongan untuk ditindaklanjuti nanti" />
       </div>
 
       <div className="space-y-2">
