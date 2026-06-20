@@ -8,13 +8,17 @@
 ## Persiapan
 
 ```bash
-# Clone / copy project ke server
+# Clone repo
+git clone <repo-url> /opt/ceklamaran
 cd /opt/ceklamaran
 
 # Copy & edit .env
 cp .env.example .env
 nano .env
 # Isi DB_PASSWORD dan JWT_SECRET (wajib diganti!)
+
+# Build & jalanin semua service
+docker compose up -d
 ```
 
 ## Cara pakai
